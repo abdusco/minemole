@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#0f172a" />
+        <title>MineMole</title>
+        <link rel="manifest" href="manifest.json" />
+        <link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+    <body>
+        <noscript class="no-js">MineMole needs JavaScript enabled. Please turn it on to play.</noscript>
+        <header class="toolbar" data-toolbar>
+            <div class="toolbar__title">MineMole</div>
+            <div class="toolbar__controls">
+                <label class="toolbar__field" for="difficulty-select">
+                    <select id="difficulty-select" data-difficulty>
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                        <option value="extreme">Extreme</option>
+                    </select>
+                </label>
+                <button type="button" class="toolbar__button" data-new-game>New Game</button>
+                <button type="button" class="toolbar__button" data-flag-mode>Flag Mode: Off</button>
+                <button type="button" class="toolbar__button" data-theme-toggle>Theme: Auto</button>
+            </div>
+        </header>
+
+        <main class="game" data-game>
+            <header class="board-header">
+                <section class="status" aria-live="polite">
+                    <div class="status__item" data-timer>Time: 000</div>
+                    <div class="status__item" data-mines>Flags: 000</div>
+                    <div class="status__item" data-message>Ready?</div>
+                </section>
+            </header>
+            <section class="board-wrapper">
+                <!-- <div class="vertical-padding"></div> -->
+                <div class="board" data-board aria-label="Minesweeper board" role="grid"></div>
+                <!-- <div class="vertical-padding"></div> -->
+            </section>
+        </main>
+
+        <script src="gameLogic.js"></script>
+        <script src="app.js"></script>
+    </body>
+</html>
