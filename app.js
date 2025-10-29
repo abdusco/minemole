@@ -19,6 +19,12 @@
         timer: document.querySelector("[data-timer]"),
         mines: document.querySelector("[data-mines]"),
         message: document.querySelector("[data-message]"),
+        modal: document.querySelector("[data-modal]"),
+        modalBackdrop: document.querySelector("[data-modal-backdrop]"),
+        modalTitle: document.querySelector("[data-modal-title]"),
+        modalMessage: document.querySelector("[data-modal-message]"),
+        modalNewGame: document.querySelector("[data-modal-new-game]"),
+        modalRewind: document.querySelector("[data-modal-rewind]"),
     };
 
     var mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
@@ -29,6 +35,7 @@
     var timerInterval = null;
     var timerAnchor = null;
     var baseElapsedMs = 0;
+    var previousGameState = null;
 
     function init() {
         bindEvents();
@@ -89,6 +96,26 @@
         window.addEventListener("beforeunload", function () {
             saveState();
         });
+
+        if (elements.modalBackdrop) {
+            elements.modalBackdrop.addEventListener("click", function () {
+                hideModal();
+            });
+        }
+
+        if (elements.modalNewGame) {
+            elements.modalNewGame.addEventListener("click", function () {
+                hideModal();
+                startNewGame(currentDifficulty);
+            });
+        }
+
+        if (elements.modalRewind) {
+            elements.modalRewind.addEventListener("click", function () {
+                hideModal();
+                rewindLastMove();
+            });
+        }
     }
 
     function buildBoard() {
@@ -153,6 +180,9 @@
             return;
         }
 
+        // Save state before revealing (for rewind)
+        saveGameStateForRewind();
+
         var result = engine.reveal(row, col);
         if (result.changed.length === 0 && !result.mineTriggered) {
             return;
@@ -164,9 +194,11 @@
             engine.revealAllMines();
             stopTimer();
             setMessage("Boom! Game over.");
+            showModal("Game Over!", "You hit a mine!");
         } else if (result.status === "won") {
             stopTimer();
             setMessage("You cleared the field!");
+            showModal("Congratulations!", "You cleared the field! 🎉");
         } else {
             setMessage("Keep going!");
         }
@@ -185,6 +217,9 @@
             return;
         }
 
+        // Save state before chording (for rewind)
+        saveGameStateForRewind();
+
         var result = engine.chord(row, col);
         if (!result || (result.changed.length === 0 && !result.mineTriggered)) {
             return;
@@ -196,9 +231,11 @@
             engine.revealAllMines();
             stopTimer();
             setMessage("Boom! Game over.");
+            showModal("Game Over!", "You hit a mine!");
         } else if (engine.status === "won") {
             stopTimer();
             setMessage("You cleared the field!");
+            showModal("Congratulations!", "You cleared the field! 🎉");
         } else {
             setMessage("Keep going!");
         }
@@ -360,6 +397,7 @@
         }
 
         flagModeEnabled = false;
+        previousGameState = null;
         updateFlagModeButton();
         resetTimer();
         setMessage("Ready?");
@@ -526,6 +564,79 @@
         } catch (error) {
             // Storage may be unavailable; fail silently to avoid interrupting play.
         }
+    }
+
+    function showModal(title, message) {
+        if (!elements.modal) {
+            return;
+        }
+        if (elements.modalTitle) {
+            elements.modalTitle.textContent = title;
+        }
+        if (elements.modalMessage) {
+            elements.modalMessage.textContent = message;
+        }
+
+        // Hide rewind button for win condition
+        if (elements.modalRewind) {
+            if (engine && engine.status === "won") {
+                elements.modalRewind.style.display = "none";
+            } else {
+                elements.modalRewind.style.display = "";
+            }
+        }
+
+        // Use setTimeout to ensure the modal appears after DOM updates
+        setTimeout(function () {
+            elements.modal.removeAttribute("hidden");
+        }, 100);
+    }
+
+    function hideModal() {
+        if (!elements.modal) {
+            return;
+        }
+        elements.modal.setAttribute("hidden", "");
+    }
+
+    function saveGameStateForRewind() {
+        if (!engine) {
+            return;
+        }
+        previousGameState = {
+            snapshot: engine.snapshot(Date.now()),
+            elapsedMs: getElapsedMs(),
+        };
+    }
+
+    function rewindLastMove() {
+        if (!previousGameState || !previousGameState.snapshot) {
+            setMessage("No move to rewind.");
+            return;
+        }
+
+        engine = MinesweeperEngine.fromSnapshot(previousGameState.snapshot);
+        if (!engine) {
+            setMessage("Failed to rewind.");
+            return;
+        }
+
+        baseElapsedMs = Number(previousGameState.elapsedMs) || 0;
+        if (previousGameState.snapshot.timerRunning && engine.status === "pending") {
+            timerAnchor = Date.now();
+            if (!timerInterval) {
+                timerInterval = window.setInterval(updateTimerDisplay, 1000);
+            }
+        } else {
+            timerAnchor = null;
+        }
+
+        buildBoard();
+        updateBoardView();
+        updateStatusBar();
+        setMessage("Move rewound!");
+        previousGameState = null;
+        saveState();
     }
 
     function registerServiceWorker() {

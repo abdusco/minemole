@@ -30,8 +30,8 @@ body[data-theme="auto"].prefers-dark {
     --color-border: #3f4c6b;
     --color-primary: #60a5fa;
     --color-primary-contrast: #0f172a;
-    --color-cell-blank: #1e293b;
-    --color-cell-revealed: #273549;
+    --color-cell-blank: #2d3b50;
+    --color-cell-revealed: #1d2a3c;
     --color-cell-border: #3f4c6b;
     --color-danger: #f87171;
     --color-success: #34d399;
@@ -160,6 +160,7 @@ body {
 .status {
     display: flex;
     gap: 1rem;
+    user-select: none;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
@@ -250,6 +251,120 @@ body {
 
     100% {
         transform: scale(1);
+    }
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 10vh;
+    animation: fadeIn 0.2s ease;
+}
+
+.modal[hidden] {
+    display: none;
+}
+
+.modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.modal__content {
+    position: relative;
+    background: var(--color-surface);
+    border-radius: 1rem;
+    padding: 2rem;
+    max-width: 90vw;
+    width: 400px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideDown 0.3s ease;
+    border: 1px solid var(--color-border);
+}
+
+.modal__title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--color-text);
+    text-align: center;
+}
+
+.modal__message {
+    margin: 0 0 1.5rem 0;
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    text-align: center;
+}
+
+.modal__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.modal__button {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    border: 1px solid transparent;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    width: 100%;
+}
+
+.modal__button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.modal__button:hover {
+    transform: translateY(-1px);
+}
+
+.modal__button--primary {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+}
+
+.modal__button--primary:hover {
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.modal__button--secondary {
+    background: transparent;
+    border-color: var(--color-border);
+    color: var(--color-text);
+}
+
+.modal__button--secondary:hover {
+    background: var(--color-surface-muted);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
     }
 }
 

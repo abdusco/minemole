@@ -12,7 +12,9 @@
     <body>
         <noscript class="no-js">MineMole needs JavaScript enabled. Please turn it on to play.</noscript>
         <header class="toolbar" data-toolbar>
-            <div class="toolbar__title">MineMole</div>
+            <div class="toolbar__title">
+                <img src="./icons/icon.svg" alt="logo" />
+            </div>
             <div class="toolbar__controls">
                 <label class="toolbar__field" for="difficulty-select">
                     <select id="difficulty-select" data-difficulty>
@@ -42,6 +44,18 @@
                 <!-- <div class="vertical-padding"></div> -->
             </section>
         </main>
+
+        <div class="modal" data-modal hidden>
+            <div class="modal__backdrop" data-modal-backdrop></div>
+            <div class="modal__content">
+                <h2 class="modal__title" data-modal-title>Game Over!</h2>
+                <p class="modal__message" data-modal-message>You hit a mine!</p>
+                <div class="modal__actions">
+                    <button type="button" class="modal__button modal__button--primary" data-modal-new-game>New Game</button>
+                    <button type="button" class="modal__button modal__button--secondary" data-modal-rewind>Rewind Last Move</button>
+                </div>
+            </div>
+        </div>
 
         <script src="gameLogic.js"></script>
         <script src="app.js"></script>
