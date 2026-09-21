@@ -3,6 +3,8 @@
 
     var STORAGE_KEY = "minemole:game-state";
     var THEME_KEY = "minemole:theme";
+    var FLAG_ICON = '<svg class="cell__flag-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-flag"></use></svg>';
+    var EXPLOSION_ICON = '<svg class="cell__explosion-icon" viewBox="0 0 2048 2048" aria-hidden="true"><use href="#icon-explosion"></use></svg>';
     var DIFFICULTIES = {
         easy: { rows: 9, cols: 9, mines: 10 },
         medium: { rows: 16, cols: 16, mines: 40 },
@@ -125,6 +127,7 @@
 
         elements.board.innerHTML = "";
         elements.board.style.setProperty("--cols", String(engine.cols));
+        elements.board.dataset.cols = String(engine.cols);
         elements.board.setAttribute("aria-rowcount", String(engine.rows));
         elements.board.setAttribute("aria-colcount", String(engine.cols));
 
@@ -293,7 +296,7 @@
                 cellEl.classList.add("cell--revealed");
                 if (view.hasMine) {
                     cellEl.classList.add("cell--mine");
-                    cellEl.textContent = "X";
+                    cellEl.innerHTML = EXPLOSION_ICON;
                     cellEl.setAttribute("aria-label", "Mine");
                 } else if (view.adjacent > 0) {
                     cellEl.textContent = String(view.adjacent);
@@ -303,7 +306,7 @@
                 }
             } else if (view.flagged) {
                 cellEl.classList.add("cell--flagged");
-                cellEl.textContent = "F";
+                cellEl.innerHTML = FLAG_ICON;
                 cellEl.setAttribute("aria-label", "Flagged cell");
             } else {
                 cellEl.setAttribute("aria-label", "Hidden cell");

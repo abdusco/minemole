@@ -10,10 +10,21 @@
         <link rel="stylesheet" href="styles.css" />
     </head>
     <body>
+        <svg class="icon-sprite" aria-hidden="true" focusable="false">
+            <symbol id="icon-flag" viewBox="0 0 24 24">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path fill="currentColor" d="m5 16.67l15.38-6.25c.38-.15.62-.52.62-.93s-.25-.77-.62-.93l-16-6.49A1 1 0 0 0 3.01 3v19h2v-5.33Z" />
+            </symbol>
+            <symbol id="icon-explosion" viewBox="0 0 2048 2048">
+                <path d="M0 0h2048v2048H0z" fill="none" />
+                <path fill="currentColor" d="m2048 1024l-384 256l96 480l-480-96l-256 384l-256-384l-480 96l96-480L0 1024l384-256l-96-480l480 96L1024 0l256 384l480-96l-96 480z" />
+            </symbol>
+        </svg>
         <noscript class="no-js">MineMole needs JavaScript enabled. Please turn it on to play.</noscript>
         <header class="toolbar" data-toolbar>
-            <div class="toolbar__title">
-                <img src="./icons/icon.svg" alt="logo" />
+            <div class="toolbar__title" aria-label="MineMole">
+                <span class="brand-mark"><img src="./icons/icon.svg" alt="" /></span>
+                <span class="brand-name">Mine<span>Mole</span></span>
             </div>
             <div class="toolbar__controls">
                 <label class="toolbar__field" for="difficulty-select">
@@ -33,9 +44,9 @@
         <main class="game" data-game>
             <header class="board-header">
                 <section class="status" aria-live="polite">
-                    <div class="status__item" data-timer>Time: 000</div>
-                    <div class="status__item" data-mines>Flags: 000</div>
-                    <div class="status__item" data-message>Ready?</div>
+                    <div class="status__item status__item--timer" data-timer>Time: 000</div>
+                    <div class="status__item status__item--flags" data-mines>Flags: 000</div>
+                    <div class="status__item status__item--message" data-message>Ready?</div>
                 </section>
             </header>
             <section class="board-wrapper">
